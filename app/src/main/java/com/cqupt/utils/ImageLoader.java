@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.util.LruCache;
 import android.widget.ImageView;
 
@@ -36,6 +35,7 @@ import java.util.Set;
  * 创建日期：2015/7/5 22:06
  * <p/>
  * 描述：
+ * 图片加载类，用于加载网络图片
  * <p/>
  * <p/>
  * 修订历史：
@@ -59,7 +59,7 @@ public class ImageLoader {
      * @param listView
      */
     public ImageLoader(ReFreshListView listView) {
-        mListView = listView;
+        this.mListView = listView;
         mTask = new HashSet<>();
         //获取运行最大内存
         int maxMemory = (int) Runtime.getRuntime().maxMemory();
@@ -182,8 +182,7 @@ public class ImageLoader {
      * 用来加载从start到end的所有图片
      */
     public void loadImages(int start, int end) {
-        Log.i("start=", start + "");
-        Log.i("end=", end + "");
+
         if (NewsAdapter.URLS.length < end) {
             end = NewsAdapter.URLS.length;
         }
@@ -197,9 +196,10 @@ public class ImageLoader {
                 task.execute(url);
                 mTask.add(task);
             } else {
-//                ImageView imageView = (ImageView) mListView.findViewWithTag(url);
-//                Log.i("findTag===", url);
-//                imageView.setImageBitmap(bitmap);
+                ImageView imageView = (ImageView) mListView.findViewWithTag(url);
+                if (imageView != null) {
+                    imageView.setImageBitmap(bitmap);
+                }
             }
         }
     }

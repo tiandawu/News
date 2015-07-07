@@ -1,7 +1,5 @@
 package com.cqupt.utils;
 
-import android.util.Log;
-
 import com.cqupt.bean.NewsBean;
 
 import org.jsoup.Jsoup;

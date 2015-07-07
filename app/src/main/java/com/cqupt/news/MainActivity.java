@@ -1,11 +1,12 @@
 package com.cqupt.news;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.cqupt.adapter.NewsAdapter;
@@ -14,27 +15,20 @@ import com.cqupt.listview.ReFreshListView;
 import com.cqupt.utils.HtmlUtils;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class MainActivity extends Activity implements ReFreshListView.IRefreshListener {
+    //是否退出程序
+    private static boolean isExit = false;
+    //定时促发器
+    private static Timer mTimer = null;
     private ReFreshListView mListView;
     private static final String htmlUrl = "http://www.dz.tt/news.html";
 
     private List<NewsBean> mList = null;
 
-
-//    Handler handler = new Handler() {
-//        @Override
-//        public void handleMessage(Message msg) {
-//            super.handleMessage(msg);
-//            int i = msg.what;
-//            if (i == 1) {
-//                content.setText(str);
-//                NewsAdapter myListViewAdapter = new NewsAdapter(list, MainActivity.this);
-//                mListView.setAdapter(myListViewAdapter);
-//            }
-//        }
-//    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,38 +40,57 @@ public class MainActivity extends Activity implements ReFreshListView.IRefreshLi
 
 
         mListView.setInterface(this);
-//        mListView.setAdapter();
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, ItemActivity.class);
+                intent.putExtra("contentUrl", mList.get(position - 1).getContentUrl());
+                startActivity(intent);
+            }
+        });
+    }
 
-//        new Thread() {
-//            @Override
-//            public void run() {
-//                super.run();
-//                try {
-//                    list = HtmlUtils.htmlParseToNewsInfo("http://www.dz.tt/news.html");
-//                    Log.i("集合大小==", list.size() + "");
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                Message msg = new Message();
-//                msg.what = 1;
-//                handler.sendMessage(msg);
-//
-//            }
-//        }.start();
+    /**
+     * 按两次返回键退出程序
+     *
+     * @param keyCode
+     * @param event
+     * @return
+     */
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
 
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (isExit == false) {
+                isExit = true;
+                if (mTimer != null) {
+                    mTimer.cancel();//将原任务从队列中移除
+                }
+                //从新实例一个定时器
+                mTimer = new Timer();
+                TimerTask task = new TimerTask() {
+                    @Override
+                    public void run() {
+                        isExit = false;
+                    }
+                };
 
-//        Toast.makeText(MainActivity.this, "ok", Toast.LENGTH_LONG).show();
-//
-//
+                Toast.makeText(MainActivity.this, "再按一次退出程序！", Toast.LENGTH_SHORT).show();
+                //延时两秒促发task任务
+                mTimer.schedule(task, 2000);
+            } else {
+                finish();
+                System.exit(0);
+            }
+            return true;
+        }
+
+        return super.onKeyUp(keyCode, event);
     }
 
     /**
      * 实现ReFreshListView中的刷新数据接口
      */
-//    @Override
-//    public void onRefresh() {
-//
-//    }
     @Override
     public void onRefresh() {
 
@@ -92,7 +105,7 @@ public class MainActivity extends Activity implements ReFreshListView.IRefreshLi
 
 
     public void setRefreshData() {
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 2; i++) {
             NewsBean newsBean = new NewsBean();
             newsBean.setImageUrl("http://img.lesu.cc/201410/amcdz/upload/images20150703/e468ff62bc8b62eec221de4addc86ec9.jpg");
             newsBean.setTitle("wo 是新数据" + i);

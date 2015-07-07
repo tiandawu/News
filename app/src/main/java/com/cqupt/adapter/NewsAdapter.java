@@ -14,7 +14,6 @@ import com.cqupt.listview.ReFreshListView;
 import com.cqupt.news.R;
 import com.cqupt.utils.ImageLoader;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,10 +45,14 @@ public class NewsAdapter extends BaseAdapter {
         mList = data;
         mInflater = LayoutInflater.from(context);
         mImageLoader = new ImageLoader(listView);
+
+        Log.i("newsadapter=", mImageLoader + "");
         URLS = new String[data.size()];
         for (int i = 0; i < data.size(); i++) {
             URLS[i] = data.get(i).getImageUrl();
         }
+
+
     }
 
     @Override
@@ -85,7 +88,6 @@ public class NewsAdapter extends BaseAdapter {
         viewHolder.image.setImageResource(R.mipmap.ic_launcher);
         String url = mList.get(i).getImageUrl();
         viewHolder.image.setTag(url);
-//        Log.i("tag===", url);
 //                mImageLoader.showImageByThread(viewHolder.image, url);
         mImageLoader.showImageByAsyncTask(viewHolder.image, url);
         viewHolder.title.setText(mList.get(i).getTitle());
@@ -98,48 +100,4 @@ public class NewsAdapter extends BaseAdapter {
         public ImageView image;
         public TextView publishTime;
     }
-
-
-//    private List<NewsBean> mList;
-//    private LayoutInflater inflater;
-//
-//    public NewsAdapter(List<NewsBean> mList, Context context,ReFreshListView listView) {
-//        this.mList = mList;
-//        this.inflater = LayoutInflater.from(context);
-//    }
-//
-//    @Override
-//    public int getCount() {
-//        return mList.size();
-//    }
-//
-//    @Override
-//    public Object getItem(int i) {
-//        return mList.get(i);
-//    }
-//
-//    @Override
-//    public long getItemId(int i) {
-//        return i;
-//    }
-//
-//    @Override
-//    public View getView(int i, View view, ViewGroup viewGroup) {
-//        view = inflater.inflate(R.layout.list_item, null);
-//        TextView textView = (TextView) view.findViewById(R.id.tv_title);
-//        ImageView imageView = (ImageView) view.findViewById(R.id.iv_icon);
-//        TextView tvContent = (TextView) view.findViewById(R.id.tv_content);
-//
-//
-//        textView.setText(mList.get(i).getTitle());
-//        imageView.setImageResource(R.mipmap.ic_launcher);
-//        tvContent.setText(mList.get(i).getPublishTime());
-//        return view;
-//    }
-//
-//
-//    public void onDataChanged(ArrayList<NewsBean> mList) {
-//        this.mList = mList;
-//        this.notifyDataSetChanged();
-//    }
 }

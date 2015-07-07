@@ -2,12 +2,14 @@ package com.cqupt.listview;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.RotateAnimation;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -40,7 +42,7 @@ import com.cqupt.utils.ImageLoader;
 public class ReFreshListView extends ListView implements AbsListView.OnScrollListener {
     private LinearLayout header;//顶部布局文件
     private int headerHeight;//顶部布局文件的高度
-    private int firstVisibleItem;//当前第一个可见item的位置
+//    private int firstVisibleItem;//当前第一个可见item的位置
     private boolean isRemark;//标记，当前是在ListView最顶端摁下的
     private int startY;//摁下时的Y值
     private int state;//当前的状态
@@ -52,8 +54,6 @@ public class ReFreshListView extends ListView implements AbsListView.OnScrollLis
 
     private int mStart, mEnd;//可见的开始和结束item
     private boolean mFirstIn = false;//是否为刚进入界面
-//    private ImageLoader mImageLoader;//图片加对象
-//    private ReFreshListView listView;//本类对象
 
     private IRefreshListener iRefreshListener;//刷新数据的接口
 
@@ -81,15 +81,9 @@ public class ReFreshListView extends ListView implements AbsListView.OnScrollLis
     private void initView(Context context) {
         //刚进入界面
         mFirstIn = true;
-        //获取本类对象
-//        this.listView = new ReFreshListView(context);
-        //初始化图片加载类
-//        mImageLoader = new ImageLoader(listView);
-//        mImageLoader = new ImageLoader(this);
         //获取顶部布局文件
         LayoutInflater inflater = LayoutInflater.from(context);
         header = (LinearLayout) inflater.inflate(R.layout.header_layout, null);
-
         //计算header的宽，高
         measureView(header);
         //获取顶部布局文件的高度
@@ -139,28 +133,30 @@ public class ReFreshListView extends ListView implements AbsListView.OnScrollLis
 
     @Override
     public void onScrollStateChanged(AbsListView absListView, int scrollState) {
+        ImageLoader mImageLoader = NewsAdapter.mImageLoader;
         if (scrollState == SCROLL_STATE_IDLE) {
             //加载可见项
-            NewsAdapter.mImageLoader.loadImages(mStart, mEnd);
+
+
+            mImageLoader.loadImages(mStart, mEnd);
 
         } else {
             //停止所有任务
-            NewsAdapter.mImageLoader.cancelAllTasks();
+            mImageLoader.cancelAllTasks();
         }
 
     }
 
     @Override
     public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
         this.mStart = firstVisibleItem;
         this.mEnd = firstVisibleItem + visibleItemCount;
         //第一次显示时调用
         if (mFirstIn && visibleItemCount > 0) {
+            mFirstIn = false;
             NewsAdapter.mImageLoader.loadImages(mStart, mEnd);
         }
-        this.firstVisibleItem = firstVisibleItem;
-
+//        this.firstVisibleItem = firstVisibleItem;
 
     }
 
@@ -170,7 +166,7 @@ public class ReFreshListView extends ListView implements AbsListView.OnScrollLis
 
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                if (firstVisibleItem == 0) {
+                if (mStart == 0) {
                     isRemark = true;
                     startY = (int) ev.getY();
                 }
@@ -288,6 +284,7 @@ public class ReFreshListView extends ListView implements AbsListView.OnScrollLis
         isRemark = false;
         refreshViewByState();
     }
+
 
     /**
      * 刷新数据接口
