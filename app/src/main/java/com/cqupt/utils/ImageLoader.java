@@ -170,7 +170,7 @@ public class ImageLoader {
         Bitmap bitmap = getBitmapFromCache(url);
         //如果缓存中不存在，就必须去下载
         if (bitmap == null) {
-            imageView.setImageResource(R.mipmap.ic_launcher);
+            imageView.setImageResource(R.mipmap.icon_default_store);
         } else {
             imageView.setImageBitmap(bitmap);
         }
