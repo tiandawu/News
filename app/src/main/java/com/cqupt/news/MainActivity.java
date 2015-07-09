@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,9 +23,11 @@ import com.cqupt.adapter.NewsAdapter;
 import com.cqupt.bean.ContentModel;
 import com.cqupt.bean.NewsBean;
 import com.cqupt.listview.ReFreshListView;
+import com.cqupt.utils.HtmlUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -43,7 +46,7 @@ public class MainActivity extends ActionBarActivity implements ReFreshListView.I
     //定时促发器
     private static Timer mTimer = null;
     private ReFreshListView mListView;
-//    private static final String htmlUrl = "http://www.dz.tt/news.html";
+    private static final String htmlUrl = "http://www.dz.tt/news.html";
 
     private List<NewsBean> mList = null;
 
@@ -183,13 +186,24 @@ public class MainActivity extends ActionBarActivity implements ReFreshListView.I
      * 设置刷新数据
      */
     public void setRefreshData() {
-        for (int i = 0; i < 1; i++) {
+
+
+        Random random = new Random();
+        int[] index = new int[5];
+        for (int i = 0; i < index.length; i++) {
+            index[i] = random.nextInt(mList.size());
+        }
+
+        for (int j = 0; j < index.length; j++) {
             NewsBean newsBean = new NewsBean();
-            newsBean.setImageUrl("http://img.lesu.cc/201410/amcdz/upload/images20150703/e468ff62bc8b62eec221de4addc86ec9.jpg");
-            newsBean.setTitle("wo 是新数据" + i);
-            newsBean.setPublishTime(i + "");
+            newsBean.setImageUrl(mList.get(index[j]).getImageUrl());
+            newsBean.setTitle(mList.get(index[j]).getTitle());
+            newsBean.setContentUrl(mList.get(index[j]).getContentUrl());
+            newsBean.setPublishTime(mList.get(index[j]).getPublishTime());
             mList.add(0, newsBean);
         }
+        
+
     }
 
 
