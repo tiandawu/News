@@ -1,14 +1,12 @@
 package com.cqupt.news;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,7 +21,6 @@ import com.cqupt.adapter.NewsAdapter;
 import com.cqupt.bean.ContentModel;
 import com.cqupt.bean.NewsBean;
 import com.cqupt.listview.ReFreshListView;
-import com.cqupt.utils.HtmlUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,9 +29,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
-public class MainActivity extends ActionBarActivity implements ReFreshListView.IRefreshListener {
+public class MainActivity extends Activity implements ReFreshListView.IRefreshListener {
 
-    private DrawerLayout drawerLayout;
+//    private DrawerLayout drawerLayout;
     private RelativeLayout leftLayout;
     private RelativeLayout rightLayout;
     private List<ContentModel> list;
@@ -80,7 +77,7 @@ public class MainActivity extends ActionBarActivity implements ReFreshListView.I
         });
 
 
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawerlayout);
+//        drawerLayout = (DrawerLayout) findViewById(R.id.drawerlayout);
         leftLayout = (RelativeLayout) findViewById(R.id.left);
         rightLayout = (RelativeLayout) findViewById(R.id.right);
         ListView listView = (ListView) leftLayout.findViewById(R.id.left_listview);
@@ -202,7 +199,7 @@ public class MainActivity extends ActionBarActivity implements ReFreshListView.I
             newsBean.setPublishTime(mList.get(index[j]).getPublishTime());
             mList.add(0, newsBean);
         }
-        
+
 
     }
 

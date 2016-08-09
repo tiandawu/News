@@ -23,7 +23,7 @@ public class ItemActivity extends Activity {
         webSettings.setUseWideViewPort(true);//关键点
 //        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
 //        webSettings.setDisplayZoomControls(false);
-//        webSettings.setJavaScriptEnabled(true); // 设置支持javascript脚本
+        webSettings.setJavaScriptEnabled(true); // 设置支持javascript脚本
 //        webSettings.setAllowFileAccess(true); // 允许访问文件
         webSettings.setBuiltInZoomControls(true); // 设置显示缩放按钮
         webSettings.setSupportZoom(true); // 支持缩放
